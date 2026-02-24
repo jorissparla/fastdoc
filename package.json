@@ -1,0 +1,18 @@
+{
+  "name": "fastdoc",
+  "version": "1.0.0",
+  "description": "Local knowledge base web app for quick-access .md and .html files",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    
+        "launch": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js",
+    "delete": "pm2 delete ecosystem.config.js",
+    "logs": "pm2 logs ecosystem.config.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "chokidar": "^3.5.3"
+  }
+}

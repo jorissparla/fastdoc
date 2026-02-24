@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    (function() {
+      var t = localStorage.getItem('fastdoc-theme');
+      if (t && t !== 'auto') document.documentElement.dataset.theme = t;
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FastDoc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- highlight.js themes -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-theme-light" disabled>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljs-theme-dark">
+  <!-- highlight.js + marked.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+</head>
+<body>
+  <div id="app">
+
+    <aside id="sidebar">
+      <div id="sidebar-top">
+        <div id="brand">
+          <span id="app-title">FastDoc</span>
+        </div>
+        <div id="search-wrap">
+          <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+          </svg>
+          <input type="text" id="search-input" placeholder="Search docs…" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+
+      <div id="file-list"></div>
+
+      <div id="sidebar-footer">
+        <!-- Theme picker popover -->
+        <div id="theme-picker" hidden>
+          <button class="theme-option" data-theme="auto">
+            <span class="swatch-dot swatch-auto"></span>
+            <span>Auto</span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button class="theme-option" data-theme="obsidian">
+            <span class="swatch-dot" style="background:#100e19; border-color:#f99b30"></span>
+            <span>Obsidian</span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button class="theme-option" data-theme="paper">
+            <span class="swatch-dot" style="background:#ede9e3; border-color:#c86c08"></span>
+            <span>Paper</span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button class="theme-option" data-theme="midnight">
+            <span class="swatch-dot" style="background:#0a0e1b; border-color:#38bdf8"></span>
+            <span>Midnight</span>
+            <span class="theme-check">✓</span>
+          </button>
+          <button class="theme-option" data-theme="moss">
+            <span class="swatch-dot" style="background:#0c1410; border-color:#6bcf7f"></span>
+            <span>Moss</span>
+            <span class="theme-check">✓</span>
+          </button>
+        </div>
+        <!-- Footer action row -->
+        <div id="sidebar-footer-row">
+          <button id="theme-btn" title="Change theme" aria-label="Change theme">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm0-2.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Zm0-8.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+          <button id="add-file-btn" title="Add file to docs">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" width="13" height="13">
+              <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+            </svg>
+            Add File
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div id="main">
+      <main id="viewer">
+        <div id="viewer-empty">
+          <div id="viewer-empty-inner">
+            <svg id="viewer-empty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <p class="empty-title">No document selected</p>
+            <p id="viewer-hint">Drop <code>.md</code> or <code>.html</code> files into <code>docs/</code>,<br>or use <strong>Add File</strong> to register from anywhere on your PC.</p>
+          </div>
+        </div>
+        <div id="viewer-content" hidden></div>
+        <iframe id="viewer-iframe" sandbox="allow-scripts allow-same-origin" hidden></iframe>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Add File Dialog -->
+  <div id="dialog-overlay" hidden>
+    <div id="dialog">
+      <div id="dialog-header">
+        <h3 id="dialog-title">Add Document</h3>
+        <button id="dialog-close" title="Close">✕</button>
+      </div>
+      <p id="dialog-desc">Enter the full path to a <code>.md</code> or <code>.html</code> file on your PC.</p>
+      <input type="file" id="dialog-file-input" accept=".md,.html" style="display:none">
+      <div id="dialog-input-row">
+        <input type="text" id="dialog-path-input" placeholder="C:\Users\you\Documents\notes.md" spellcheck="false">
+        <button type="button" id="dialog-browse-btn">Browse…</button>
+      </div>
+      <p id="dialog-error" hidden></p>
+      <div id="dialog-actions">
+        <button id="dialog-cancel">Cancel</button>
+        <button id="dialog-confirm" class="primary">Add Document</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog -->
+  <div id="confirm-overlay" hidden>
+    <div id="confirm-dialog">
+      <p id="confirm-message"></p>
+      <div id="confirm-actions">
+        <button id="confirm-cancel">Cancel</button>
+        <button id="confirm-ok" class="destructive">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
